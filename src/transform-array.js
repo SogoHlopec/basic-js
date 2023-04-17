@@ -1,4 +1,4 @@
-const { NotImplementedError } = require('../extensions/index.js');
+const { NotImplementedError } = require("../extensions/index.js");
 
 /**
  * Create transformed array based on the control sequences that original
@@ -15,10 +15,27 @@ const { NotImplementedError } = require('../extensions/index.js');
  */
 function transform(arr) {
   if (!Array.isArray(arr)) {
-    throw new Error("'arr' parameter must be an instance of the Array!")
+    throw new Error("'arr' parameter must be an instance of the Array!");
   }
+
+  const result = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === "--discard-next") {
+      i++;
+    } else if (arr[i] === "--discard-prev" || arr[i + 1] === "--discard-prev") {
+    } else if (arr[i] === `--double-next`) {
+      result.push(arr[i + 1]);
+    } else if (arr[i] === `--double-prev` && arr[i - 2] === `--discard-next`) {
+    } else if (arr[i] === "--double-prev") {
+      result.push(arr[i - 1]);
+    } else {
+      result.push(arr[i]);
+    }
+  }
+  return result.filter((el) => el);
 }
 
 module.exports = {
-  transform
+  transform,
 };
